@@ -57,7 +57,7 @@ model Bet {
     userId    String
     amount    Float
     set       Int      @default(0)
-    question  Question @relation(fields: [questionId], references: [id])
+    question  Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
     subject   Subject?  @relation(fields: [subjectId], references: [id])
     subjectId Int?
     createdAt DateTime @default(now())

@@ -20,7 +20,7 @@ export default async function SubjectBetsGrid({ id }: { id: string }) {
       <div className="grid grid-cols-4 grid-rows-3 gap-4">
         {data.length > 0 &&
           data.slice(0, 11).map((bet) => (
-            <Card className="@container/card" key={bet.id}>
+            <Card className="@container/card m-4" key={bet.id}>
               <CardHeader>
                 <CardTitle className="text-md font-semibold tabular-numsl">
                   {bet.text}

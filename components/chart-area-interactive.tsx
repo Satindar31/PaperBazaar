@@ -27,7 +27,7 @@ const data = await client.getWebsitePageviews("c8d00265-c59c-4073-ad37-5cadb8906
   startAt: Date.now() - 90 * 24 * 60 * 60 * 1000,
   endAt: Date.now(),
   unit: "day",
-  timezone: "Asia/Tokyo"
+  timezone: "Asia/Kolkata",
 })
 console.log(data.data?.pageviews[0].t)
 

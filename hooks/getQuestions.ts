@@ -9,6 +9,7 @@ export async function getQuestionsFromSubject(subjectID:number) {
             subject: true,
             text: true,
             id: true,
+            grade: true
         }
     });
     return questions;

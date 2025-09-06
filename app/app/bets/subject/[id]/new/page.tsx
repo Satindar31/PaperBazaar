@@ -58,7 +58,7 @@ export default async function BetsPage({
           </section>
           <section>
             <h2 className="sr-only">Betting Form</h2>
-            <BetForm subjects={[{ ...questions[0].subject, id: String(questions[0].subject.id) }]} questionsBySubject={questionsOnSubject} />
+            <BetForm grade={questions[0].grade.grade} subjects={[{ ...questions[0].subject, id: String(questions[0].subject.id) }]} questionsBySubject={questionsOnSubject} />
           </section>
         </>
       ) : (

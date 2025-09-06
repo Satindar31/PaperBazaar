@@ -22,6 +22,18 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 type Subject = { id: string; name: string };
 type QuestionMap = Record<string, { id: string; label: string }[]>;
@@ -36,26 +48,27 @@ const SET_OPTIONS = [
 export default function BetForm({
   subjects,
   questionsBySubject,
+  grade,
 }: {
   subjects: Subject[];
   questionsBySubject: QuestionMap;
+  grade: number;
 }) {
-  // const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [subjectId, setSubjectId] = useState<string>(subjects[0]?.id ?? "");
-  const [questionId, setQuestionId] = useState<string>("7");
+  const [questionId, setQuestionId] = useState<string>(
+    searchParams.get("questionId") ?? ""
+  );
   const [amount, setAmount] = useState<string>("");
   const [specifySet, setSpecifySet] = useState<boolean>(false);
   const [setId, setSetId] = useState<string>("");
 
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      setQuestionId(params.get("questionId") ?? "");
-    }
-  }, []);
   const [submittedMsg, setSubmittedMsg] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
 
+  const [openQInput, setOpenQInput] = useState(false);
 
   // Base payout multiplier is 2x; specifying the set doubles it to 4x
   const payoutMultiplier = specifySet ? 4 : 2;
@@ -104,7 +117,6 @@ export default function BetForm({
     const setLabel = specifySet
       ? SET_OPTIONS.find((s) => s.id === setId)?.label
       : undefined;
-    console.log(questionId);
     fetch("/api/general/bets", {
       method: "POST",
       body: JSON.stringify({
@@ -124,6 +136,8 @@ export default function BetForm({
               setLabel ? " • " + setLabel : ""
             }`
           );
+
+          router.push("/app/bets/subject/" + subjectId)
           return res.json();
         } else {
           throw new Error("Failed to place bet. Please try again.");
@@ -135,14 +149,7 @@ export default function BetForm({
       .catch((error) => {
         console.error("Error placing bet:", error);
       });
-
-    // Optionally clear form
-    // setAmount("")
-    // setQuestionId("")
-    // setSpecifySet(false)
-    // setSetId("")
   }
-  console.log(questions);
 
   return (
     <Card aria-labelledby="bet-form-title">
@@ -178,26 +185,114 @@ export default function BetForm({
 
             <div className="grid gap-2">
               <Label htmlFor="question">Question</Label>
-                            <Select
-                value={questionId}
-                onValueChange={(v) => setQuestionId(v)}
-                disabled={!subjectId || questions.length === 0}
-              >
-                <SelectTrigger id="question" aria-label="Question">
-                  <SelectValue
-                    placeholder={
-                      subjectId ? "Select question" : "Select subject first"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {questions.map((q) => (
-                    <SelectItem key={q.id} value={q.id}>
-                      {q.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Popover
+                  open={openQInput}
+                  onOpenChange={(open) => setOpenQInput(open)}
+                >
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={openQInput}
+                      className="w-full justify-between transition-all duration-300"
+                      style={{
+                        minHeight: "2.5rem",
+                        whiteSpace: "normal",
+                        wordBreak: "break-word",
+                        maxWidth: "100%",
+                        // Let the button grow with content
+                        height: "auto",
+                      }}
+                    >
+                      <span
+                        className="block text-left"
+                        style={{
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {questionId
+                          ? questions.find((q) => q.id === questionId)?.label ?? questionId
+                          : "Select question"}
+                      </span>
+                      <ChevronsUpDown className="opacity-50 shrink-0 ml-2" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput placeholder="Search question..." />
+                      <CommandList>
+                        <CommandEmpty>
+                            <form
+                            onSubmit={async (e) => {
+                              e.preventDefault();
+                              // Get the value of the question searched
+                              const questionText = (
+                              document.querySelector(
+                                'input[placeholder="Search question..."]'
+                              ) as HTMLInputElement
+                              )?.value;
+                              const pro = fetch("/api/general/questions", {
+                              method: "POST",
+                              body: JSON.stringify({
+                                subjectId,
+                                text: questionText,
+                                grade,
+                              }),
+                              }).then((res) => {
+                              if (res.ok) {
+                                setOpenQInput(false);
+                                res.json().then((data) => {
+                                setQuestionId(data.id.toString());
+                                console.log(data.id.toString());
+                                console.log(questionId);
+                                router.refresh();
+                                });
+                              }
+                              });
+
+                              toast.promise(pro, {
+                              success: () => `Question created successfully.`,
+                              error: "Failed to create question.",
+                              });
+                            }}
+                            >
+                            <Button
+                              type="submit"
+                              variant={"outline"}
+                            >
+                              Create question
+                            </Button>
+                            </form>
+                        </CommandEmpty>
+                        <CommandGroup>
+                          {questions.map((q) => (
+                            <CommandItem
+                              key={q.id}
+                              value={q.label}
+                              onSelect={(value) => {
+                                setQuestionId(value);
+                                setOpenQInput(false);
+                              }}
+                            >
+                              <span
+                                className="block"
+                                style={{
+                                  whiteSpace: "normal",
+                                  wordBreak: "break-word",
+                                  maxWidth: "32rem",
+                                }}
+                              >
+                                {q.label}
+                              </span>
+                              <Check className="opacity-0" />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
             </div>
           </div>
 
