@@ -19,11 +19,10 @@ Think of it as **fantasy cricket**, but for your **syllabus**.
 ## ✨ Features  
 
 - [ ] 💰 **DimagCoins** — our in-house parody currency.  
-- [ ] 📜 **Topic Betting** — choose from the syllabus, wager your coins.  
-- [ ] 🔍 **OCR-Powered Checking** — upload scanned exam papers, system auto-verifies which topics appeared.  
-- [ ] 💸 **Automatic Payouts** — winners get multipliers, losers cry.  
-- [ ] 🏆 **Leaderboard** — track the "Exam Whisperers" vs the "AndhaGuess Champs".  
-- [ ] 🎭 **Parody Vibes** — fun names, meme-worthy results, and startup-style branding.  
+- [x] 📜 **Topic Betting** — choose from the syllabus, wager your coins.  
+- [ ] 🔍 **OCR-Powered Checking** — upload scanned exam papers, system auto-verifies which topics appeared.  V2
+- [ ] 💸 **Automatic Payouts** — winners get multipliers, losers cry.  V2
+- [ ] 🏆 **Leaderboard** — track the "Exam Whisperers" vs the "AndhaGuess Champs".  V1/school release
 
 ---
 
