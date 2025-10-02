@@ -1,16 +1,15 @@
 import { auth } from "@/auth";
 import { AdminSidebar } from "@/components/admin-sidebar";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { isUserAdmin } from "@/hooks/admin/stats";
-
+import { getQuestionsWithBets } from "@/hooks/admin/getQuestionsWithBets";
 import { SessionProvider } from "next-auth/react";
 import { Suspense } from "react";
+import QuestionsClient from "./questions-client";
 
-export default async function Page() {
-  const session = await auth()
+export default async function QuestionsPage() {
+  const session = await auth();
   const admin = await isUserAdmin(session?.user?.email);
 
   if (!admin) {
@@ -20,6 +19,9 @@ export default async function Page() {
       </div>
     );
   }
+
+  const questions = await getQuestionsWithBets();
+
   return (
     <SessionProvider>
       <SidebarProvider
@@ -35,16 +37,10 @@ export default async function Page() {
           <SiteHeader />
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
                 <Suspense fallback={<div>Loading...</div>}>
-                  <SectionCards />
+                  <QuestionsClient initialQuestions={questions} />
                 </Suspense>
-                <div className="px-4 lg:px-6">
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <ChartAreaInteractive />
-                  </Suspense>
-                </div>
-                {/* <DataTable data={data} /> */}
               </div>
             </div>
           </div>
