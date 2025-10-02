@@ -45,6 +45,7 @@ model Question {
     grade   Grade   @relation(fields: [gradeId], references: [grade])
     subject Subject @relation(fields: [subjectId], references: [id])
     set     Int     @default(0)
+    inExam  Boolean @default(false)
 
     gradeId   Int
     subjectId Int
