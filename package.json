@@ -34,7 +34,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@simplewebauthn/browser": "9.0.1",
     "@simplewebauthn/server": "9.0.3",
-    "@tabler/icons-react": "^3.34.1",
+    "@tabler/icons-react": "^3.35.0",
     "@tanstack/react-table": "^8.21.3",
     "@umami/api-client": "^0.80.0",
     "class-variance-authority": "^0.7.1",
