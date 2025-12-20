@@ -580,10 +580,10 @@
     pvtsutils "^1.3.6"
     tslib "^2.8.1"
 
-"@prisma/client@^6.14.0":
-  version "6.15.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-6.15.0.tgz#c4166aa8492878c842e63c515853d7a4125e6168"
-  integrity sha512-wR2LXUbOH4cL/WToatI/Y2c7uzni76oNFND7+23ypLllBmIS8e3ZHhO+nud9iXSXKFt1SoM3fTZvHawg63emZw==
+"@prisma/client@^6.19.0":
+  version "6.19.1"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-6.19.1.tgz#8c564b4e09f1bab2540c69a17a46652a4552f5dd"
+  integrity sha512-4SXj4Oo6HyQkLUWT8Ke5R0PTAfVOKip5Roo+6+b2EDTkFg5be0FnBWiuRJc0BC0sRQIWGMLKW1XguhVfW/z3/A==
 
 "@prisma/config@6.13.0":
   version "6.13.0"
