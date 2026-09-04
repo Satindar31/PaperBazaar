@@ -33,7 +33,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@simplewebauthn/browser": "9.0.1",
-    "@simplewebauthn/server": "9.0.3",
+    "@simplewebauthn/server": "13.3.2",
     "@tabler/icons-react": "^3.34.1",
     "@tanstack/react-table": "^8.21.3",
     "@umami/api-client": "^0.80.0",
